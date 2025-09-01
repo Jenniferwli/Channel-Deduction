@@ -6,7 +6,7 @@ Zirui Chen, Zhaoyang Zhang, Zhaohui Yang, Chongwen Huang, Mérouane Debbah
 
 ## Usages
 ### Dataset
-This project is based on the DeepMIMO dataset. To prepare the required data, please first download the original dataset from the following link: 
+This project is based on the DeepMIMO dataset. To prepare the required data, please first download the original dataset from the following link:  
 *Google Drive*: https://drive.google.com/drive/folders/1d5g5FczyaGndYtXRsLyiTQ1UMRYmNTQb?usp=drive_link  
 Move the downloaded compressed file into the `/Data` directory and run the `decompress.sh` script from there to extract it.  
 After the extraction is complete, execute the `pathchange.sh` script to replace the original absolute paths with current directory.  
