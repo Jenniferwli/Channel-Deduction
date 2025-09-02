@@ -3,24 +3,34 @@ Zirui Chen, Zhaoyang Zhang, Zhaohui Yang, Chongwen Huang, Mérouane Debbah
 ## Overview of this work
 
 ## Main result
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-    <figure>
-        <img src="https://github.com/user-attachments/assets/fc5ecbef-7aa0-4979-b6d1-c954e63e8361" alt="Performance under a single scenario" style="width:100%;">
-        <figcaption style="text-align: center;"><b>图 1. 单一场景下的性能</b></figcaption>
-    </figure>
-    <figure>
-        <img src="https://github.com/user-attachments/assets/58f3f1a2-ae28-420c-b661-6403b1a576b3" alt="Performance of direct cross-scenario reuse" style="width:100%;">
-        <figcaption style="text-align: center;"><b>图 2. 直接跨场景复用的性能</b></figcaption>
-    </figure>
-    <figure>
-        <img src="https://github.com/user-attachments/assets/31adbe63-6db8-4120-99f2-7a4666a0e0c3" alt="Performance of multi-scenario joint learning and new scenario generalization" style="width:100%;">
-        <figcaption style="text-align: center;"><b>图 3. 多场景联合学习与新场景泛化性能</b></figcaption>
-    </figure>
-    <figure>
-        <img src="https://github.com/user-attachments/assets/bea66c0d-fc9f-40cd-84e0-5dd5a97bc82" alt="Performance comparisons between ALLoc and conventional new scenario tuning/training" style="width:100%;">
-        <figcaption style="text-align: center;"><b>图 4. ALLoc与传统新场景调优/训练的性能比较</b></figcaption>
-    </figure>
-</div>
+<table width="100%">
+  <tr>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/fc5ecbef-7aa0-4979-b6d1-c954e63e8361" alt="Performance under a single scenario" style="width:95%;">
+      <br>
+      <em>图 1. 单一方案下的性能</em>
+    </td>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/52251350-d7cc-479d-9081-72090b232284" alt="Performance of direct cross-scenario reuse" style="width:95%;">
+      <br>
+      <em>图 3. 直接跨场景复用的性能</em>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/d52493b4-ff0c-4523-9702-187391a1466e" alt="Performance of multi-scenario joint learning and new scenario generalization" style="width:95%;">
+      <br>
+      <em>图 2. 多场景联合学习与新场景泛化性能</em>
+    </td>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/f0589064-8005-452b-b80f-c466cf16ca9a" alt="Performance comparisons between ALLoc and conventional new scenario tuning/training" style="width:95%;">
+      <br>
+      <em>图 4. ALLoc与传统新场景调优/训练的性能比较</em>
+    </td>
+  </tr>
+
+</table>
+
 ## Usages
 ### Dataset
 This project is based on the __DeepMIMO dataset__. To prepare the required data, please first download the original dataset from the following link:  
