@@ -61,4 +61,18 @@ Each method includes three core files: `model.py`, `train.py`, and `test.py`. To
 
 Additionally, the script files for ACDNet and RCDNet also contain an experiment to __test the continuous channel deduction service of CDNet for mobile users__. It first programmatically generates a smooth, irregular user trajectory (`plot_trace_smooth.py`) and then runs a simulation along this path (`test_trace_smooth.py`). The simulation compares the model's performance under __error propagation__ against __under the ideal case of no error propagation__, thereby validating the model's stability and robustness for practical application.  
 ### Note
-Run `decompress.sh` inside the `/Data` folder to extract the dataset. The other scripts are executed inside the `/CD` folder (`pathchange.sh`, `data_generation.sh`, `ACDNet.sh`, `RCDNet.sh`, `Estimation.sh`).
+Run `decompress.sh` inside the `/Data` folder to extract the dataset. The other scripts are executed inside the `/CD` folder (`pathchange.sh`, `data_generation.sh`, `ACDNet.sh`, `RCDNet.sh`, `Estimation.sh`).  
+## Citation
+If you find this work useful in your research, please consider citing us:  
+```bibtex
+@ARTICLE{10845822,
+  author={Chen, Zirui and Zhang, Zhaoyang and Yang, Zhaohui and Huang, Chongwen and Debbah, Mérouane},
+  journal={IEEE Journal on Selected Areas in Communications}, 
+  title={Channel Deduction: A New Learning Framework to Acquire Channel From Outdated Samples and Coarse Estimate}, 
+  year={2025},
+  volume={43},
+  number={3},
+  pages={944-958},
+  keywords={Channel estimation;Estimation;OFDM;Correlation;Accuracy;Hands;Costs;Resistance;Mathematical models;Long short term memory;Channel acquisition;channel estimation;channel deduction;deep learning;massive MIMO;OFDM},
+  doi={10.1109/JSAC.2025.3531576}}
+
