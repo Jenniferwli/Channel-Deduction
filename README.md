@@ -3,11 +3,24 @@ Zirui Chen, Zhaoyang Zhang, Zhaohui Yang, Chongwen Huang, Mérouane Debbah
 ## Overview of this work
 
 ## Main result
-<img width="2423" height="1126" alt="638201207681559266" src="https://github.com/user-attachments/assets/fc5ecbef-7aa0-4979-b6d1-c954e63e8361" />
-<img width="1688" height="1260" alt="386921195035082402" src="https://github.com/user-attachments/assets/58f3f1a2-ae28-420c-b661-6403b2a576b3" />
-<img width="1810" height="471" alt="92834662987229259" src="https://github.com/user-attachments/assets/31adbe63-6db8-4120-99f2-7a4666a0e0c3" />
-<img width="1842" height="1475" alt="476576441932672419" src="https://github.com/user-attachments/assets/bea66c0d-fc9f-40cd-84e0-5dd55a97bc82" />
-
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+    <figure>
+        <img src="https://github.com/user-attachments/assets/fc5ecbef-7aa0-4979-b6d1-c954e63e8361" alt="Performance under a single scenario" style="width:100%;">
+        <figcaption style="text-align: center;"><b>图 1. 单一场景下的性能</b></figcaption>
+    </figure>
+    <figure>
+        <img src="https://github.com/user-attachments/assets/58f3f1a2-ae28-420c-b661-6403b1a576b3" alt="Performance of direct cross-scenario reuse" style="width:100%;">
+        <figcaption style="text-align: center;"><b>图 2. 直接跨场景复用的性能</b></figcaption>
+    </figure>
+    <figure>
+        <img src="https://github.com/user-attachments/assets/31adbe63-6db8-4120-99f2-7a4666a0e0c3" alt="Performance of multi-scenario joint learning and new scenario generalization" style="width:100%;">
+        <figcaption style="text-align: center;"><b>图 3. 多场景联合学习与新场景泛化性能</b></figcaption>
+    </figure>
+    <figure>
+        <img src="https://github.com/user-attachments/assets/bea66c0d-fc9f-40cd-84e0-5dd5a97bc82" alt="Performance comparisons between ALLoc and conventional new scenario tuning/training" style="width:100%;">
+        <figcaption style="text-align: center;"><b>图 4. ALLoc与传统新场景调优/训练的性能比较</b></figcaption>
+    </figure>
+</div>
 ## Usages
 ### Dataset
 This project is based on the __DeepMIMO dataset__. To prepare the required data, please first download the original dataset from the following link:  
