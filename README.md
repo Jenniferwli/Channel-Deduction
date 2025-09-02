@@ -75,4 +75,3 @@ If you find this work useful in your research, please consider citing us:
   pages={944-958},
   keywords={Channel estimation;Estimation;OFDM;Correlation;Accuracy;Hands;Costs;Resistance;Mathematical models;Long short term memory;Channel acquisition;channel estimation;channel deduction;deep learning;massive MIMO;OFDM},
   doi={10.1109/JSAC.2025.3531576}}
-
