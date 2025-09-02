@@ -8,24 +8,24 @@ Zirui Chen, Zhaoyang Zhang, Zhaohui Yang, Chongwen Huang, Mérouane Debbah
     <td width="50%" align="center">
       <img src="https://github.com/user-attachments/assets/fc5ecbef-7aa0-4979-b6d1-c954e63e8361" alt="Performance under a single scenario" style="width:95%;">
       <br>
-      <em>图 1. 单一方案下的性能</em>
+      <em>Figure 1. NMSE of proposed CDNets and benchmarks under various estimated present channel sizes</em>
     </td>
     <td width="50%" align="center">
       <img src="https://github.com/user-attachments/assets/52251350-d7cc-479d-9081-72090b232284" alt="Performance of direct cross-scenario reuse" style="width:95%;">
       <br>
-      <em>图 3. 直接跨场景复用的性能</em>
+      <em>Figure 3. The trajectory of a user’s movement in ‘O1’ scenario (2024 time slots)</em>
     </td>
   </tr>
   <tr>
     <td width="50%" align="center">
       <img src="https://github.com/user-attachments/assets/d52493b4-ff0c-4523-9702-187391a1466e" alt="Performance of multi-scenario joint learning and new scenario generalization" style="width:95%;">
       <br>
-      <em>图 2. 多场景联合学习与新场景泛化性能</em>
+      <em>Figure 2. The generalization of CDNets on testing sets (NMSE) during training</em>
     </td>
     <td width="50%" align="center">
       <img src="https://github.com/user-attachments/assets/f0589064-8005-452b-b80f-c466cf16ca9a" alt="Performance comparisons between ALLoc and conventional new scenario tuning/training" style="width:95%;">
       <br>
-      <em>图 4. ALLoc与传统新场景调优/训练的性能比较</em>
+      <em>Figure 4. NMSE between the acquired channel and the true channel during movement.</em>
     </td>
   </tr>
 
@@ -33,7 +33,7 @@ Zirui Chen, Zhaoyang Zhang, Zhaohui Yang, Chongwen Huang, Mérouane Debbah
 
 ## Usages
 ### Dataset
-This project is based on the __DeepMIMO dataset__. To prepare the required data, please first download the original dataset from the following link:  
+This project is based on the __DeepMIMO 'O1' dataset__. To prepare the required data, please first download the original dataset from the following link:  
 
 *Google Drive*: https://drive.google.com/drive/folders/1d5g5FczyaGndYtXRsLyiTQ1UMRYmNTQb?usp=drive_link  
 
