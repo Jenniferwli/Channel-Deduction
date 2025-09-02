@@ -1,7 +1,13 @@
 # Channel Deduction:A New Learning Framework to Acquire Channel from Outdated Samples and Coarse Estimate
-Zirui Chen, Zhaoyang Zhang, Zhaohui Yang, Chongwen Huang, Mérouane Debbah
+Zirui Chen, Zhaoyang Zhang, Zhaohui Yang, Chongwen Huang, Mérouane Debbah  
+***
+This repository is the official implementation of paper [Channel Deduction:A New Learning Framework to Acquire Channel from Outdated Samples and Coarse Estimate](https://ieeexplore.ieee.org/abstract/document/10845822).
 ## Overview of this work
+To address the two key challenges in next-generation wireless systems—the high pilot overhead of channel estimation and the performance degradation from dynamic changes and error propagation in channel prediction—we propose a new framework named __Channel Deduction (CD)__. The core insight of this framework is the complementarity of estimation and prediction: the former uses current but limited information, while the latter, despite leveraging rich historical information, struggles to cope with present-time randomness and error accumulation. Channel Deduction is the first unified framework designed to synergistically fuse these two information sources.  
 
+Specifically, Channel Deduction innovatively combines outdated channel samples from past time slots with a coarse estimate of the present channel obtained via very few pilots to acquire a complete and accurate channel representation. To achieve this, we designed Channel Deduction Networks (CDNets), which implement a deep fusion of time-space-frequency information through a specialized architecture: the networks utilize a CMixer module to process correlations in the space and frequency domains , and then use a time-domain interaction module to handle the channel's temporal evolution. Based on this, we propose two specific architectures: __the Recurrence-based RCDNet (using LSTM)__ and __the Attention-based ACDNet (using Transformer)__.  
+
+Experimental results show that this method achieves high-quality channel acquisition while __reducing pilot overhead by up to 88.9%__. Furthermore, it maintains stable and continuous operation even under complex user mobility and error propagation, significantly outperforming traditional prediction methods. Channel Deduction marks an important step toward achieving robust and practical wireless AI.
 ## Main result
 <table width="100%">
   <tr>
