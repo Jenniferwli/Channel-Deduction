@@ -3,6 +3,7 @@ Zirui Chen, Zhaoyang Zhang, Zhaohui Yang, Chongwen Huang, Mérouane Debbah
 ## Overview of this work
 
 ## Main result
+<img width="2423" height="1126" alt="638201207681559266" src="https://github.com/user-attachments/assets/fc5ecbef-7aa0-4979-b6d1-c954e63e8361" />
 
 ## Usages
 ### Dataset
