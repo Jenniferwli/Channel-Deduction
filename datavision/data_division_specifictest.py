@@ -14,9 +14,9 @@ os.makedirs(path+'/specifictest_mobile',exist_ok=True)
 os.makedirs(path+'/specifictest_static',exist_ok=True)
 
 stride=6
-choice_in_box=32 #一个box内采样的散点个数
+choice_in_box=32 # The number of sampled data points within a single box
 test_box=1000
-box_choice=20 #每个box内产生20个序列，长度均为17
+box_choice=20 # Generate 20 sequences within each box, each with a length of 17
 list_len=17
 
 # mobile case
@@ -38,7 +38,7 @@ for i in tqdm(range(test_box)):
         list_sample = random.sample(whole_list,list_len-4)
         past_sample=list_sample[0:-1]
         present_sample=list_sample[-1]
-        # 将 "当前" 的索引 'present_sample' 添加到 "过去" 的列表中 4 次
+        # Append the "current" index, present_sample, to the "past" list 4 times
         past_sample.append(present_sample)
         past_sample.append(present_sample)
         past_sample.append(present_sample)

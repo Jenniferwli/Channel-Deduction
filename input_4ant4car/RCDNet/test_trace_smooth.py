@@ -8,7 +8,7 @@ import hdf5storage
 from model import *
 from einops import rearrange
 
-cpu_num = 4 # 这里设置成你想运行的CPU个数
+cpu_num = 4 # Set this to the number of CPU cores you want to use
 os.environ["OMP_NUM_THREADS"] = str(cpu_num)  # noqa
 os.environ["MKL_NUM_THREADS"] = str(cpu_num) # noqa
 torch.set_num_threads(cpu_num )
@@ -18,20 +18,19 @@ random.seed(1)
 
 batch_size=1
 
-# 输入给模型的低维部分信道尺寸
+# The dimension of the low-dimensional partial channel input to the model
 input_ant_size=4
 input_car_size=4
-# 模型要恢复的目标高维完整信道尺寸
+# The target dimension of the high-dimensional full channel for the model to reconstruct
 ant_size=32
 car_size=32
 
-# 根据输入和目标尺寸计算下采样的步长
+# Calculate the downsampling stride based on the input and target dimensions
 step_ant=ant_size//input_ant_size
 step_car=car_size//input_car_size
 
-depth_est=3     # CMixer网络深度
-depth_pred=2    # LSTM信道预测网络深度
-
+depth_est=3     # Depth of the CMixer network
+depth_pred=2    # Depth of the LSTM channel prediction network
 
 model=CDNet(input_ant_size,input_car_size,ant_size,car_size,depth_est,depth_pred)
 
@@ -39,11 +38,11 @@ if len(gpu_list.split(',')) > 1:
     model = torch.nn.DataParallel(model).cuda()  # model.module
 else:
     model = model.cuda()
-model.load_state_dict(torch.load('./model' +'.pth'),strict=False)   # 加载预训练的模型权重
+model.load_state_dict(torch.load('./model' +'.pth'),strict=False)   # Load the pre-trained model weights
 
 print('model parameters:', sum(param.numel() for param in model.parameters()))
 
-path='/mnt/HD2/czr/32ant*32car_3.5GHz_40MHz_R501-1400_V1_23.9.25/mat'  # 数据集获取路径
+path='/mnt/HD2/czr/32ant*32car_3.5GHz_40MHz_R501-1400_V1_23.9.25/mat'  # Path to the dataset
 x_trace=np.load('x_trace_smooth.npy')
 y_trace=np.load('y_trace_smooth.npy')
 len_trace=x_trace.shape[0]
@@ -52,8 +51,8 @@ len_trace=x_trace.shape[0]
 
 def channel_index(x_index,y_index,path,high=181):
     '''
-    根据坐标返回从mat文件返回信道数据。
-    注意：这里的x,y是plot的x轴和y轴，与deepmimo的x轴和y轴正好转置
+    Returns channel data from the .mat file based on the given coordinates.
+    Note: The x and y here refer to the plot's x-axis and y-axis, which are transposed relative to the x and y axes in the DeepMIMO dataset.
     '''
     index=x_index*high+y_index
     channel_data_mat=hdf5storage.loadmat(path + '/DeepMIMO_dataset_' + str(index) + '.mat')
@@ -63,13 +62,13 @@ def channel_index(x_index,y_index,path,high=181):
 
 truth_channel_list=[]
 for i in range(len_trace):
-    # 根据坐标获得真实信道数据
+    # Get the ground truth channel data based on the coordinates
     reverse_x_index=x_trace[i]
     y_index=y_trace[i]
     x_index=899-reverse_x_index
     channel_data=channel_index(x_index,y_index,path)
-    channel_data=torch.tensor(channel_data) # 将numpy数组转换为PyTorch张量
-    channel_data=rearrange(channel_data,'(b ant) car c -> b ant car c',b=1) # 重塑张量维度，增加一个batch维度 (b=1)
+    channel_data=torch.tensor(channel_data) # Convert the NumPy array to a PyTorch tensor
+    channel_data=rearrange(channel_data,'(b ant) car c -> b ant car c',b=1) # Reshape the tensor to add a batch dimension (b=1)
     channel_data=channel_data.cuda().float()
     channel_data=channel_data*10000
     truth_channel_list.append(channel_data)
@@ -84,12 +83,12 @@ for i in range(len_trace):
     if (i<past_len):
         deduction_channel_list.append(truth_channel_list[i])
     else:
-        # --- 模式1: Working under error propagation ---
+        # --- Mode1: Working under error propagation ---
         h_now=truth_channel_list[i]
         h_now_input = h_now[:, 0:step_ant * (input_ant_size - 1) + 1:step_ant,
-                      0:step_car * (input_car_size - 1) + 1:step_car, :]    # 只取部分信道作为模型输入
-        h_past_list=deduction_channel_list[i-past_len:i]    # 用deduction_channel_list中8个过去的完整信道和当前的部分信道预测当前完整信道数据
-        h_past_input = torch.stack(h_past_list,dim=0)       # 把h_past_list中的8个元素在第0个维度整合成一个张量
+                      0:step_car * (input_car_size - 1) + 1:step_car, :]    # Use only a partial channel as the model input
+        h_past_list=deduction_channel_list[i-past_len:i]    # Use the 8 past full channel states from deduction_channel_list and the current partial channel to predict the current full channel
+        h_past_input = torch.stack(h_past_list,dim=0)       # Stack the 8 elements from h_past_list into a single tensor along dimension 0
         # print(h_past_input.shape)
         h_past_input=rearrange(h_past_list,'len b ant car c -> b len ant car c')
 
@@ -97,7 +96,7 @@ for i in range(len_trace):
             h_now_output = model(h_now_input, h_past_input)
         nmse = Nmse(h_now.cpu().detach().numpy(), h_now_output.cpu().detach().numpy())
         rou = Corr(h_now.cpu().detach().numpy(), h_now_output.cpu().detach().numpy(), ant_size, car_size)
-        # 将本次的预测结果 h_now_output 添加到递推列表中，供下一步使用
+        # Append the current prediction result, h_now_output, to the history list for use in the next step
         deduction_channel_list.append(h_now_output)
         nmse_list.append(nmse)
         rou_list.append(rou)
@@ -106,12 +105,12 @@ for i in range(len_trace):
             print(nmse,rou)
         
 
-        # --- 模式2: Working under the ideal case of no error propagation ---
+        # --- Mode2: Working under the ideal case of no error propagation ---
         h_now = truth_channel_list[i]
         h_now_input = h_now[:, 0:step_ant * (input_ant_size - 1) + 1:step_ant,
-                      0:step_car * (input_car_size - 1) + 1:step_car, :]    # 只取部分信道作为模型输入
-        h_past_list = truth_channel_list[i - past_len:i]    # 用truth_channel_list中8个过去的完整信道和当前的部分信道预测当前完整信道数据
-        h_past_input = torch.stack(h_past_list, dim=0)      # 把h_past_list中的8个元素在第0个维度整合成一个张量
+                      0:step_car * (input_car_size - 1) + 1:step_car, :]    # Use only a partial channel as the model input
+        h_past_list = truth_channel_list[i - past_len:i]    # Use the 8 past full channel states from truth_channel_list and the current partial channel to predict the current full channel
+        h_past_input = torch.stack(h_past_list, dim=0)      # Stack the 8 elements from h_past_list into a single tensor along dimension 0.
         # print(h_past_input.shape)
         h_past_input = rearrange(h_past_list, 'len b ant car c -> b len ant car c')
 
@@ -131,7 +130,7 @@ print('no error propagation:',sum(nmse_list_truth)/len(nmse_list_truth))
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 config = {
-    "font.family":'Times New Roman',  # 设置字体类型
+    "font.family":'Times New Roman',  # Set the font type
     "font.size": 26,
 }
 rcParams.update(config)

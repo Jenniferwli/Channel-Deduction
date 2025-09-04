@@ -18,9 +18,9 @@ os.makedirs(path+'/test',exist_ok=True)
 x_length=181
 y_length=900
 
-stride=6    #每块边长
+stride=6    # Side length of each block
 
-#场景划分为块
+# The scene is divided into blocks
 x_box=x_length//stride
 y_box=y_length//stride
 total_box=x_box*y_box
@@ -33,7 +33,7 @@ box_index=np.arange(total_box)
 np.random.shuffle(box_index)
 
 for i in tqdm(range(train_box)):
-    #先推断第i个box在横纵上是第几个box
+    # First, infer the grid coordinates (row and column index) of the i-th box.
     x_box_index=box_index[i]%x_box
     y_box_index=box_index[i]//x_box
 
@@ -43,7 +43,7 @@ for i in tqdm(range(train_box)):
     # zuobiao_list = []
     data_list = []
     for j in pianyi_list_sample:
-        #再推断第j个数据在box内的相对横纵坐标
+        # Then, infer the relative horizontal and vertical coordinates of the j-th data point within the box
         x_pianyi = j % stride
         y_pianyi = j // stride
         basic_zuobiao = y_box_index * x_length * stride + x_box_index * stride
@@ -58,7 +58,7 @@ for i in tqdm(range(train_box)):
 np.save(path+'/train'+'/data_len'+'.npy',train_box)
 
 for i in tqdm(range(test_box)):
-    #先推断第i个box在横纵上是第几个box
+    # First, infer the grid coordinates (row and column index) of the i-th box.
     x_box_index=box_index[i+train_box]%x_box
     y_box_index=box_index[i+train_box]//x_box
 
@@ -68,7 +68,7 @@ for i in tqdm(range(test_box)):
     # zuobiao_list = []
     data_list = []
     for j in pianyi_list_sample:
-        #再推断第j个数据在box内的相对横纵坐标
+        # Then, infer the relative horizontal and vertical coordinates of the j-th data point within the box
         x_pianyi = j % stride
         y_pianyi = j // stride
         basic_zuobiao = y_box_index * x_length * stride + x_box_index * stride

@@ -20,30 +20,30 @@ class FeedForward(nn.Module):
 class MixerBlock_2D(nn.Module):
     def __init__(self, ant_size,car_size,dropout = 0.):
         super().__init__()
-        # Space Mixing 空间混合（处理天线维度）
+        # Space Mixing (Handle the antenna dimension)
         self.ant_mix = nn.Sequential(
-            nn.LayerNorm(ant_size*2),   # *2 是因为复数数据被表示为实部和虚部两个通道
+            nn.LayerNorm(ant_size*2),   # *2 is because the complex data is represented as two channels: the real part and the imaginary part
             FeedForward(ant_size*2, ant_size*2*2, dropout),
         )
-        # Frequency Mixing 频率混合（处理子载波维度）
+        # Frequency Mixing (Handle the subcarrier dimension)
         self.car_mix = nn.Sequential(
             nn.LayerNorm(car_size*2),
             FeedForward(car_size*2, car_size*2*2, dropout),
         )
-    def forward(self, x):   # 输入、输出张量形状[b ant car channel=2]
-        x=rearrange(x,'b ant car c -> b car (ant c)')   # MLP可以独立作用于每个子载波上的所有天线
-        x=x+self.ant_mix(x) # 残差链接
+    def forward(self, x):   # input、output tensor shape[b ant car channel=2]
+        x=rearrange(x,'b ant car c -> b car (ant c)')   # The MLP is applied independently to all antennas for each subcarrier
+        x=x+self.ant_mix(x) # Residual connection
         x=rearrange(x,'b car (ant c) -> b ant car c',c=2)
 
-        x=rearrange(x,'b ant car c -> b ant (car c)')   # MLP可以独立作用于每个天线上的所有子载波
-        x=x+self.car_mix(x) # 残差链接
+        x=rearrange(x,'b ant car c -> b ant (car c)')   # The MLP is applied independently to all subcarriers for each antenna
+        x=x+self.car_mix(x) # Residual connection
         x=rearrange(x,'b ant (car c) -> b ant car c',c=2)
 
         return x
 
 class MLPMixer_us_2D(nn.Module):
     """
-    将多个 MixerBlock_2D 模块堆叠起来，形成一个深度网络。
+    Multiple MixerBlock_2D modules are stacked to form a deep network.
     """
     def __init__(self,ant_size,car_size,depth,dropout = 0.):
         super(MLPMixer_us_2D, self).__init__()
@@ -58,8 +58,8 @@ class MLPMixer_us_2D(nn.Module):
 
 class est_net(nn.Module):
     """
-    一个采用CMixer的完整的信道估计网络。
-    它接收一个部分（或低维度）的信道作为输入，然后重建出完整（或高维度）的信道。
+    This is a complete channel estimation network using the CMixer architecture.
+    It takes a partial (or low-dimensional) channel as input and reconstructs the full (or high-dimensional) channel.
     """
     def __init__(self,input_ant_size,input_car_size,ant_size,car_size,depth):
         super(est_net, self).__init__()
@@ -70,17 +70,17 @@ class est_net(nn.Module):
         self.fc_reverse2=nn.Linear(car_size*2,car_size*2)
 
     def forward(self,x):
-        # 1.输入映射/升维：将输入的天线和子载波维度扩展到模型内部处理的目标维度
+        # 1.nput Mapping / Projection: The input antenna and subcarrier dimensions are expanded to the hidden dimensions for the model's internal processing.
         out=rearrange(x,'b in_ant in_car c -> b in_car (in_ant c)')
         out=self.fc1(out)
         out=rearrange(out,'b in_car (ant c) -> b ant (in_car c)',c=2)
         out=self.fc2(out)
         out=rearrange(out,'b ant (car c) -> b ant car c',c=2)
 
-        # 2.核心混合：使用MLPMixer_us_2D网络在空间和频率维度上进行深度特征交叠学习
+        # 2.Core Mixing: The MLPMixer_us_2D network is used to interleave the spatial and frequency dimensions.
         out=self.mlpmixer_us(out)
 
-        # 3.输出映射：将处理后的特征映射回最终的信道维度
+        # 3.Output Mapping / Projection: The processed features are mapped back to the final channel dimensions.
         out=rearrange(out,'b ant car c -> b car (ant c)')
         out=self.fc_reverse1(out)
         out=rearrange(out,'b car (ant c)-> b ant (car c)',c=2)
@@ -92,7 +92,7 @@ class est_net(nn.Module):
 
 class CDNet(nn.Module):
     '''
-    相当于est_net
+    Equal to est_net
     '''
     def __init__(self,input_ant_size,input_car_size,ant_size,car_size,depth):
         super(CDNet, self).__init__()
@@ -115,38 +115,40 @@ class DatasetFolder(Dataset):
         return data
 
 def Nmse(input,output):
-    # 计算归一化均方误差
+    # Calculate the Normalized Mean Squared Error (NMSE)
     B=input.shape[0]    # batch size
     sum_nmse=0
-    # 遍历batch中的每一个样本
+    # Iterate over each sample in the batch
     for i in range(B):
-        # 计算单个样本的NMSE
-        # 公式为: ||真实值 - 预测值||² / ||真实值||²
-        # np.linalg.norm 默认计算L2范数（欧几里得范数）
+        # calculate NMSE of single sample
+        # The formula is: ||Ground Truth - Prediction||² / ||Ground Truth||²
+        # np.linalg.norm calculates the L2 norm (Euclidean norm) by default
         nmse=(np.linalg.norm(input[i]-output[i]))**2/(np.linalg.norm(input[i]))**2
 
-        # 累加每个样本的NMSE
+        # Accumulate the NMSE for each sample
         sum_nmse+=nmse
 
-     # 返回一个batch内的平均NMSE
+     # Return the average (or mean) NMSE for the batch
     return sum_nmse/B
 
 def cos(a,b):   
     '''
-    计算预测信道和真实信道之间的余弦相关性，a,b都是复值
+    Calculate the cosine similarity between the predicted channel and the ground truth channel, where both are complex-valued.
+    a,b are both complex-valued.
     '''
-    numerator=np.linalg.norm(a.dot(np.conjugate(b).T))  #分子
-    denominator=np.linalg.norm(a)*np.linalg.norm(b)     #分母
+    numerator=np.linalg.norm(a.dot(np.conjugate(b).T)) 
+    denominator=np.linalg.norm(a)*np.linalg.norm(b)
     cos=numerator/denominator
     return cos
 
 def Corr(a,b,num_ant,num_car):
     '''
-    该函数首先将输入数据转换为复数形式，
-    然后逐个子载波计算余弦相似度，最后将所有结果在整个批次和所有子载波上进行平均
+    The function first converts the input data into a complex format, 
+    then calculates the cosine similarity for each subcarrier, 
+    and finally averages the results over the entire batch and all subcarriers.
     '''
     B = a.shape[0]  # batch size
-    # 将输入数据转换为复数形式
+    # Convert the input data into a complex format
     a = a.reshape([B, num_ant, num_car, 2])
     b = b.reshape([B, num_ant, num_car, 2])
     a_real,a_imag=a[:,:,:,0],a[:,:,:,1]
@@ -154,7 +156,8 @@ def Corr(a,b,num_ant,num_car):
     a_complex=a_real+1j*a_imag
     b_complex=b_real+1j*b_imag
 
-    # 逐个batch和子载波计算余弦相似度,在整个batch和所有子载波上进行平均
+    # Calculate the cosine similarity for each subcarrier across the batch，
+    # and then average the results over the entire batch and all subcarriers.
     sum_rou_batch=0
     for i in range(B):
         sum_rou_car=0
