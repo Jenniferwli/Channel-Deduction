@@ -1,0 +1,11 @@
+calflops==0.3.2
+einops==0.8.1
+hdf5storage==0.1.19
+matplotlib==3.10.6
+numpy==2.3.3
+ptflops==0.7.5
+scipy==1.16.1
+thop==0.1.1.post2209072238
+torch==2.3.1+cu121
+torchstat==0.0.7
+tqdm==4.66.4
