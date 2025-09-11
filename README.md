@@ -38,6 +38,8 @@ Experimental results show that this method achieves high-quality channel acquisi
 </table>
 
 ## Usages
+### Environment requirements
+To ensure dataset partitioning and expansion, approximately 1TB of storage space is required. We train the Channel-Deduction Model on the Nvidia Hopper architecture, requiring around 4GB of GPU memory (both the model and data are based on float32). If the device has insufficient memory, the batch_size parameter in the code can be appropriately reduced (default batch_size=500). For detailed library dependencies, please refer to requirements.txt.
 ### Dataset
 This project is based on the __DeepMIMO 'O1' dataset__. To prepare the required data, please first download the original dataset from the following link:  
 
