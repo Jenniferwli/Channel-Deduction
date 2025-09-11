@@ -71,7 +71,7 @@ class est_net(nn.Module):
         self.fc_reverse2=nn.Linear(car_size*2,car_size*2)
 
     def forward(self,x): 
-        # 1.nput Mapping / Projection: The input antenna and subcarrier dimensions are expanded to the hidden dimensions for the model's internal processing.
+        # 1.Input Mapping / Projection: The input antenna and subcarrier dimensions are expanded to the hidden dimensions for the model's internal processing.
         out=rearrange(x,'b in_ant in_car c -> b in_car (in_ant c)')
         out=self.fc1(out)
         out=rearrange(out,'b in_car (ant c) -> b ant (in_car c)',c=2)
