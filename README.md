@@ -1,7 +1,7 @@
 # Channel Deduction:A New Learning Framework to Acquire Channel from Outdated Samples and Coarse Estimate
 Zirui Chen, Zhaoyang Zhang, Zhaohui Yang, Chongwen Huang, Mérouane Debbah  
 ***
-This repository is the official implementation of paper [Channel Deduction:A New Learning Framework to Acquire Channel from Outdated Samples and Coarse Estimate](https://ieeexplore.ieee.org/abstract/document/10845822).
+This repository is the official implementation of paper [Channel Deduction: A New Learning Framework to Acquire Channel from Outdated Samples and Coarse Estimate](https://ieeexplore.ieee.org/abstract/document/10845822).
 ## Overview of this work
 To address the two key challenges in next-generation wireless systems—the high pilot overhead of channel estimation and the performance degradation from dynamic changes and error propagation in channel prediction—we propose a new framework named __Channel Deduction (CD)__. The core insight of this framework is the complementarity of estimation and prediction: the former uses current but limited information, while the latter, despite leveraging rich historical information, struggles to cope with present-time randomness and error accumulation. Channel Deduction is the first unified framework designed to synergistically fuse these two information sources.  
 
